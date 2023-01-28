@@ -1,23 +1,30 @@
-const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
+
+const postRouter = require('./routes/postRoutes');
+const userRouter = require('./routes/userRoutes');
+
 const app = express();
 
-app.use(express.json()); //add to notes when do proper post request
+// 1) MIDDLEWARES
 
-const posts = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/posts.json`));
+// will show the request info in the console
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
-app.get('/api/posts', (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'Success', result: posts.length, data: { posts } });
+app.use(express.json());
+
+// to show requested at time in console:
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
 });
 
-app.post('/api/posts', (req, res) => {
-  console.log(req.body);
-  res.send('Done!!');
-});
+// 2) ROUTES
 
-const port = 3000;
-app.listen(port, () => {
-  console.log(`App running on port ${port}`);
-});
+app.use('/api/posts', postRouter);
+app.use('/api/users', userRouter);
+
+module.exports = app;
