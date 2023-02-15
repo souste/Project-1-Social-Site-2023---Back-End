@@ -1,12 +1,16 @@
 const express = require('express');
 const morgan = require('morgan');
 
+const cors = require('cors');
+
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const postRouter = require('./routes/postRoutes');
 const userRouter = require('./routes/userRoutes');
 
 const app = express();
+
+app.use(cors());
 
 // 1) MIDDLEWARES
 
