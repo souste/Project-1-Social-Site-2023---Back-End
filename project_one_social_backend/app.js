@@ -9,7 +9,7 @@ const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
-app.use(cors({ origin: 'http://127.0.0.1:3000' }));
+app.use(cors());
 
 // 1) MIDDLEWARES
 
