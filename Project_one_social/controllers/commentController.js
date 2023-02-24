@@ -1,4 +1,5 @@
 const Comment = require('../models/commentModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllComments = catchAsync(async (red, res, next) => {
@@ -19,5 +20,17 @@ exports.createComment = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: 'success',
     data: { comment: newComment },
+  });
+});
+
+exports.deleteComment = catchAsync(async (req, res, next) => {
+  const comment = await Comment.findByIdAndDelete(req.params.id);
+
+  if (!comment) {
+    return next(new AppError(`No comment found with that ID`, 404));
+  }
+  res.status(204).json({
+    status: 'success',
+    data: null,
   });
 });
