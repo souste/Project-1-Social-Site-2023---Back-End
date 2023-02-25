@@ -33,11 +33,28 @@ exports.createPost = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updatePost = catchAsync(async (req, res, next) => {
-  const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+// exports.updatePost = catchAsync(async (req, res, next) => {
+//   const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     runValidators: true,
+//   });
+
+//   if (!post) {
+//     return next(new AppError(`No post found with that ID`, 404));
+//   }
+
+//   res.status(200).json({
+//     status: 'success',
+//     data: { post },
+//   });
+// });
+
+exports.incrementLikes = catchAsync(async (req, res, next) => {
+  const post = await Post.findByIdAndUpdate(
+    req.params.id,
+    { $inc: { likes: 1 } },
+    { new: true, runValidators: true }
+  );
 
   if (!post) {
     return next(new AppError(`No post found with that ID`, 404));
